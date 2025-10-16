@@ -1,0 +1,48 @@
+#include <stdio.h>
+#include <omp.h>
+
+int main() {
+    int arr[] = {3, 7, 2, 9, 5, 11, 4};
+    int n = 7, max = arr[0];
+
+    #pragma omp parallel for reduction(max:max)
+    for (int i = 0; i < n; i++) {
+        if (arr[i] > max)
+            max = arr[i];
+    }
+
+    printf("Maximum element = %d\n", max);
+    return 0;
+}
+
+
+#include <stdio.h>
+#include <omp.h>
+
+int main() {
+    int a = 5, b = 9, max;
+
+    #pragma omp parallel
+    {
+        #pragma omp single
+        {
+            max = (a > b) ? a : b;
+            printf("Maximum = %d (computed by thread %d)\n", max, omp_get_thread_num());
+        }
+    }
+    return 0;
+}
+
+#include <stdio.h>
+#include <omp.h>
+
+int main() {
+    #pragma omp parallel
+    {
+        int tid = omp_get_thread_num();   // get current thread ID
+        int total = omp_get_num_threads(); // get total threads
+
+        printf("Hello from thread %d of %d\n", tid, total);
+    }
+    return 0;
+}
